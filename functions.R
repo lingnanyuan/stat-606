@@ -12,13 +12,14 @@ corrplot(d$id)
 
 Raw_est <- function(d){
   n=length(d$x)
+  d$est=matrix(rep(0,3*n),n,3)
   for( i in c(1:n)){
     t <- data.frame(x=d$x[which(d$id[i,]==1)],y=d$y[which(d$id[i,]==1)],z=d$z[which(d$id[i,]==1)])
     coordinates(t) = ~x+y
     vgm <- variogram(z~1,t)
     est <- fit.variogram(vgm, vgm("Mat"))
-    d$est <- rbind(d$est,c(est$psill[2],est$range[2],est$kappa[2]))
+    d$est[i,] <- c(est$psill[2],est$range[2],est$kappa[2])
   }
   return(d)
 }
-d<-Raw_est(d_list)
+d<-Raw_est(d)
