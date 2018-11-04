@@ -1,4 +1,5 @@
 library(sp)
+library(sppmix)
 
 find_Neigh <- function(d,h){
   N = length(d$x)
@@ -8,7 +9,6 @@ find_Neigh <- function(d,h){
   return(d)
 }
 d<-find_Neigh(d,80000)
-corrplot(d$id)
 
 Raw_est <- function(d){
   n=length(d$x)
@@ -23,3 +23,31 @@ Raw_est <- function(d){
   return(d)
 }
 d<-Raw_est(d)
+
+pred<-function(s0,m0,par0,d){
+  x = c(s0[1],d$x)
+  y = c(s0[2],d$y)
+  N = length(x)
+  par_t = rbind(par0,d$est)
+  d_matrix <- as.matrix(dist(cbind(x,y),diag = 1, upper = 1))
+  Cov = matrix(rep(0,N*N),N,N)
+  for (i in 1:N){
+    for ( j in 1:N){
+      Cov(i,j) = Matern(d_matrix[i,j],
+                        range=(par_t[i,2]+par_t[j,2])/2,
+                        smoothness = (par_t[i,3]+par_t[j,3])/2,
+                        phi=(par_t[i,1]+par_t[j,1])/2)
+    }
+  }
+  C = Cov[-1,-1]
+  C0 = Cov[1,]
+  return(m_0+C0%*%C%*%as.matrix(d$z-d$m))
+}
+
+Gamma0 <- function(x0,Nx0,theta0){
+  t =data.frame(x=c(x0[1],Nx0$x),
+                y=c(x0[2],Nx0$y))
+  d_matrix = as.matrix(dist(cbind(t$x,t$y),diag = 1, upper = 1))
+  g0 = theta0[1]*2-Matern(d_matrix,range=theta0[2],nu=theta0[3],phi=theta0[1])
+  return(g0)
+}
