@@ -1,7 +1,8 @@
-sigmatilde <- function(x0, location, delta, sigmahat){
+sigmatilde <- function(x0, dlist, delta, sigmahat){
   m <- dim(location)[1]
   W_0 <- rep(0, m)
   K <- rep(0,m)
+  location <- cbind(dlist$x, dlist$y)
   for (i in 1:m){
     K[i] <- Kernelf(x0-location[i,])
   }
@@ -12,22 +13,22 @@ sigmatilde <- function(x0, location, delta, sigmahat){
 }
 
 
-Kernelf <- function(x£¬ sigma){
+Kernelf <- function(x, sigma){
   return(1/(2*pi*sigma^2)*exp(-(sum(x^2)/(2*sigma^2))))
 }
 
-psitilde <- function(x0, location, delta, psihat)
-
-
-
-
-
-
-
-
-
-
-
+psitilde <- function(x0, dlist, delta, psihat)
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
 
 
