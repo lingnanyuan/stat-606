@@ -4,7 +4,7 @@ sigmatilde <- function(x0, dlist, delta, sigmahat){
   K <- rep(0,m)
   location <- cbind(dlist$x, dlist$y)
   for (i in 1:m){
-    K[i] <- Kernelf(x0-location[i,])
+    K[i] <- Kernelf(x0-location[i,],1)
   }
   W_0 <- K/sum(K)
   sigmah <- apply(location, 1, sigmahat)
